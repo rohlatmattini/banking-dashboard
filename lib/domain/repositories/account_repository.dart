@@ -1,21 +1,12 @@
+// lib/domain/repositories/account_repository.dart
+import '../dtos/transaction_dto.dart';
 import '../entities/account_entity.dart';
 import '../enums/account_type_enum.dart';
 
 abstract class AccountRepository {
-  // Group operations
-  Future<AccountEntity?> findUserGroup(int userId);
-  Future<AccountEntity> createGroup(int userId);
+  // New method to get users with their accounts
+  Future<List<Map<String, dynamic>>> getUsersWithAccounts();
 
-  // Account operations
-  Future<AccountEntity> createChildAccount({
-    required int userId,
-    required int groupId,
-    required AccountTypeEnum type,
-    String? dailyLimit,
-    String? monthlyLimit,
-  });
-
-  // New method for creating user account directly
   Future<AccountEntity> createUserAccount({
     required int userId,
     required AccountTypeEnum type,
@@ -23,10 +14,10 @@ abstract class AccountRepository {
     String? monthlyLimit,
   });
 
-  // Query operations
-  Future<List<AccountEntity>> listByUser(int userId);
   Future<AccountEntity?> findByPublicId(String publicId);
-
-  // Update operations
   Future<AccountEntity> updateStateByPublicId(String publicId, String newState);
+  Future<AccountEntity> createGroup(int userId);
+  Future<Map<String, dynamic>> deposit(DepositData data, String idempotencyKey);
+  Future<Map<String, dynamic>> withdraw(WithdrawData data, String idempotencyKey);
+  Future<Map<String, dynamic>> transfer(TransferData data, String idempotencyKey);
 }

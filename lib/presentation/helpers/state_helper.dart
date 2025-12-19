@@ -1,18 +1,33 @@
+// lib/presentation/helpers/state_helper.dart
 import 'package:flutter/material.dart';
-import '../../domain/entities/account_entity.dart';
 import '../../domain/patterns/states/account_state.dart';
 
 class StateHelper {
-  static Color hexToColor(String hexColor) {
-    hexColor = hexColor.replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF$hexColor";
+  static Color getColorForState(AccountState state) {
+    return getColorForStateName(state.name);
+  }
+
+  static Color getColorForStateName(String stateName) {
+    switch (stateName) {
+      case 'active':
+        return Colors.teal;
+      case 'frozen':
+        return Colors.teal;
+      case 'suspended':
+        return Colors.teal;
+      case 'closed':
+        return Colors.teal;
+      default:
+        return Colors.teal;
     }
-    return Color(int.parse(hexColor, radix: 16));
   }
 
   static IconData getIconForState(AccountState state) {
-    switch (state.name) {
+    return getIconForStateName(state.name);
+  }
+
+  static IconData getIconForStateName(String stateName) {
+    switch (stateName) {
       case 'active':
         return Icons.check_circle;
       case 'frozen':
@@ -22,35 +37,7 @@ class StateHelper {
       case 'closed':
         return Icons.cancel;
       default:
-        return Icons.error;
+        return Icons.help;
     }
   }
-
-  static Color getColorForState(AccountState state) {
-    return hexToColor(state.colorHex);
-  }
-
-  static Color getColorForType(AccountEntity account) {
-    return hexToColor(account.type.colorHex);
-  }
-
-  static IconData getIconForType(AccountEntity type) {
-    switch (type.type.value) {
-      case 'savings':
-        return Icons.savings;
-      case 'checking':
-        return Icons.account_balance;
-      case 'loan':
-        return Icons.money;
-      case 'investment':
-        return Icons.trending_up;
-      case 'group':
-        return Icons.account_balance_wallet;
-      default:
-        return Icons.account_balance_wallet;
-    }
-  }
-
-
-
 }

@@ -23,7 +23,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
   final ApiAccountDataSource _dataSource = ApiAccountDataSource();
   bool _isLoading = false;
 
-  // قائمة أنواع الحسابات المتاحة
+  // Available account types
   final List<AccountTypeEnum> _availableTypes = [
     AccountTypeEnum.CHECKING,
     AccountTypeEnum.SAVINGS,
@@ -44,7 +44,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'إضافة عميل جديد',
+          'Add New Customer',
           style: TextStyle(
             fontFamily: 'Cairo',
             color: Colors.white,
@@ -66,7 +66,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // معلومات العميل
+              // Customer Information
               Card(
                 elevation: 3,
                 child: Padding(
@@ -75,7 +75,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'معلومات العميل',
+                        'Customer Information',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -85,14 +85,22 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _nameController,
+                        cursorColor:Colors.teal,
                         decoration: const InputDecoration(
-                          labelText: 'اسم العميل',
+                          labelText: 'Customer Name',
+                          labelStyle: TextStyle(color: Colors.grey),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.teal),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.teal),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'الرجاء إدخال اسم العميل';
+                            return 'Please enter customer name';
                           }
                           return null;
                         },
@@ -101,17 +109,25 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
+                        cursorColor:Colors.teal,
                         decoration: const InputDecoration(
-                          labelText: 'البريد الإلكتروني',
+                          labelText: 'Email',
+                          labelStyle: TextStyle(color: Colors.grey),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.email),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.teal),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.teal),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'الرجاء إدخال البريد الإلكتروني';
+                            return 'Please enter email';
                           }
                           if (!value.contains('@')) {
-                            return 'الرجاء إدخال بريد إلكتروني صحيح';
+                            return 'Please enter a valid email';
                           }
                           return null;
                         },
@@ -120,14 +136,22 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                       TextFormField(
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
+                        cursorColor:Colors.teal,
                         decoration: const InputDecoration(
-                          labelText: 'رقم الهاتف',
+                          labelText: 'Phone Number',
+                          labelStyle: TextStyle(color: Colors.grey),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.phone),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.teal),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.teal),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'الرجاء إدخال رقم الهاتف';
+                            return 'Please enter phone number';
                           }
                           return null;
                         },
@@ -139,7 +163,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
 
               const SizedBox(height: 20),
 
-              // الحسابات المراد إنشاؤها
+              // Accounts to be created
               Card(
                 elevation: 3,
                 child: Padding(
@@ -151,7 +175,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'الحسابات المراد إنشاؤها',
+                            'Accounts to be Created',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -162,13 +186,13 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                             icon: const Icon(Icons.add_circle,
                                 color: Colors.teal),
                             onPressed: _addAccount,
-                            tooltip: 'إضافة حساب',
+                            tooltip: 'Add Account',
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'يمكن إضافة أكثر من حساب للعميل في نفس الوقت',
+                        'You can add multiple accounts for the customer at the same time',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
@@ -183,7 +207,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                               Icon(Icons.account_balance_wallet,
                                   size: 60, color: Colors.grey),
                               SizedBox(height: 8),
-                              Text('لم يتم إضافة أي حسابات بعد'),
+                              Text('No accounts added yet'),
                             ],
                           ),
                         )
@@ -200,7 +224,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
 
               const SizedBox(height: 20),
 
-              // ملخص الطلب
+              // Request Summary
               Card(
                 elevation: 3,
                 child: Padding(
@@ -209,7 +233,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'ملخص الطلب',
+                        'Request Summary',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -219,7 +243,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          const Text('عدد الحسابات: '),
+                          const Text('Number of Accounts: '),
                           Text(
                             '${_accounts.length}',
                             style: const TextStyle(
@@ -232,13 +256,13 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Text('أنواع الحسابات: '),
+                          const Text('Account Types: '),
                           Expanded(
                             child: Wrap(
                               spacing: 4,
                               children: _accounts
                                   .map((a) => Chip(
-                                label: Text(a.type.arabicName),
+                                label: Text(a.type.englishName),
                                 backgroundColor:
                                 Colors.teal.withOpacity(0.1),
                               ))
@@ -254,7 +278,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
 
               const SizedBox(height: 30),
 
-              // أزرار التحكم
+              // Control Buttons
               Row(
                 children: [
                   Expanded(
@@ -263,11 +287,11 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                       style: OutlinedButton.styleFrom(
                         padding:
                         const EdgeInsets.symmetric(vertical: 16),
-                        side: const BorderSide(color: Colors.red),
+                        side: const BorderSide(color: Colors.teal),
                       ),
                       child: const Text(
-                        'إلغاء',
-                        style: TextStyle(color: Colors.red),
+                        'Cancel',
+                        style: TextStyle(color: Colors.teal),
                       ),
                     ),
                   ),
@@ -281,7 +305,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                         const EdgeInsets.symmetric(vertical: 16),
                       ),
                       child: const Text(
-                        'إضافة العميل',
+                        'Add Customer',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -315,7 +339,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      account.type.arabicName,
+                      account.type.englishName,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: _getTypeColor(account.type),
@@ -326,24 +350,24 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red, size: 20),
                   onPressed: () => _removeAccount(index),
-                  tooltip: 'حذف الحساب',
+                  tooltip: 'Delete Account',
                 ),
               ],
             ),
             const SizedBox(height: 8),
             if (account.dailyLimit != null)
-              Text('الحد اليومي: \$${account.dailyLimit}'),
+              Text('Daily Limit: \$${account.dailyLimit}'),
             if (account.monthlyLimit != null)
-              Text('الحد الشهري: \$${account.monthlyLimit}'),
+              Text('Monthly Limit: \$${account.monthlyLimit}'),
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () => _editAccount(index),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal.withOpacity(0.1),
+                backgroundColor: Colors.teal,
                 foregroundColor: Colors.teal,
                 minimumSize: const Size(double.infinity, 36),
               ),
-              child: const Text('تعديل الحساب'),
+              child: const Text('Edit Account',style: TextStyle(color: Colors.white),),
             ),
           ],
         ),
@@ -377,7 +401,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
         account?.type ?? AccountTypeEnum.CHECKING;
 
     return AlertDialog(
-      title: Text(index == null ? 'إضافة حساب' : 'تعديل حساب'),
+      title: Text(index == null ? 'Add Account' : 'Edit Account',),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -399,34 +423,48 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
                         color: _getTypeColor(type),
                       ),
                       const SizedBox(width: 8),
-                      Text(type.arabicName),
+                      Text(type.englishName),
                     ],
                   ),
                 );
               }).toList(),
               decoration: const InputDecoration(
-                labelText: 'نوع الحساب',
+                labelText: 'Account Type',
+                labelStyle: TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
               ),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: dailyLimitController,
               keyboardType: TextInputType.number,
+              cursorColor: Colors.teal,
               decoration: const InputDecoration(
-                labelText: 'الحد اليومي (اختياري)',
+                labelText: 'Daily Limit (Optional)',
+                labelStyle: TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.today),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
               ),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: monthlyLimitController,
               keyboardType: TextInputType.number,
+              cursorColor: Colors.teal,
               decoration: const InputDecoration(
-                labelText: 'الحد الشهري (اختياري)',
+                labelText: 'Monthly Limit (Optional)',
+                labelStyle: TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.calendar_month),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
               ),
             ),
           ],
@@ -435,7 +473,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('إلغاء'),
+          child: const Text('Cancel',style: TextStyle(color: Colors.teal),),
         ),
         ElevatedButton(
           onPressed: () {
@@ -458,7 +496,7 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
             setState(() {});
             Navigator.pop(context);
           },
-          child: const Text('حفظ'),
+          child: const Text('Save',style:TextStyle(color: Colors.teal)),
         ),
       ],
     );
@@ -477,8 +515,8 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
 
     if (_accounts.isEmpty) {
       Get.snackbar(
-        'خطأ',
-        'الرجاء إضافة حساب واحد على الأقل',
+        'Error',
+        'Please add at least one account',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -502,27 +540,30 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
         accounts: _accounts,
       );
 
-      // استدعاء API
+      // Call API
       final result = await _dataSource.onboardCustomer(onboardData);
 
-      // إظهار رسالة النجاح
+      // Show success message
       Get.defaultDialog(
-        title: 'تمت العملية بنجاح',
+        title: 'Operation Successful',
         middleText:
-        'تم إنشاء العميل وفتح الحسابات بنجاح.\nتم إرسال بيانات الدخول عبر البريد.',
-        textConfirm: 'موافق',
+        'Customer has been created and accounts opened successfully.',
+        textConfirm: 'OK',
         onConfirm: () {
-          Get.back(); // إغلاق dialog
-          Get.back(); // العودة للصفحة السابقة
+
+          // Clear all form data
+          _clearForm();
+          Get.back(); // Close dialog
+          Get.back(); // Go back to previous page
         },
         confirmTextColor: Colors.white,
       );
 
-      // يمكن هنا تحديث قائمة الحسابات أو إجراء عمليات أخرى
+      // You can update account list or perform other operations here
     } catch (e) {
       Get.snackbar(
-        'خطأ',
-        'فشل في إضافة العميل: $e',
+        'Error',
+        'Failed to add customer: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -534,6 +575,22 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
     }
   }
 
+// دالة جديدة لتنظيف الحقول
+  void _clearForm() {
+    // مسح النصوص من الحقول
+    _nameController.clear();
+    _emailController.clear();
+    _phoneController.clear();
+
+    // مسح الحسابات المضافة
+    _accounts.clear();
+
+    // إعادة تعيين حالة الفورم
+    _formKey.currentState?.reset();
+
+    // تحديث الواجهة
+    setState(() {});
+  }
   IconData _getTypeIcon(AccountTypeEnum type) {
     switch (type) {
       case AccountTypeEnum.SAVINGS:
@@ -552,15 +609,16 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
   Color _getTypeColor(AccountTypeEnum type) {
     switch (type) {
       case AccountTypeEnum.SAVINGS:
-        return Colors.green;
+        return Colors.teal;
       case AccountTypeEnum.CHECKING:
-        return Colors.blue;
+        return Colors.teal;
       case AccountTypeEnum.LOAN:
-        return Colors.orange;
+        return Colors.teal;
       case AccountTypeEnum.INVESTMENT:
-        return Colors.purple;
+        return Colors.teal;
       case AccountTypeEnum.GROUP:
         return Colors.teal;
     }
   }
+
 }

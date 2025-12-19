@@ -5,7 +5,7 @@ class FrozenState implements AccountState {
   String get name => 'frozen';
 
   @override
-  String get arabicName => 'مجمد';
+  String get englishName => 'frozen';
 
   @override
   String get colorHex => '#2196F3';
@@ -21,7 +21,7 @@ class FrozenState implements AccountState {
   }
 
   @override
-  bool get canDeposit => true;
+  bool get canDeposit => false;
 
   @override
   bool get canWithdraw => false;

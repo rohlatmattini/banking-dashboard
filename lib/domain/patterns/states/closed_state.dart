@@ -5,7 +5,7 @@ class ClosedState implements AccountState {
   String get name => 'closed';
 
   @override
-  String get arabicName => 'مغلق';
+  String get englishName => 'closed';
 
   @override
   String get colorHex => '#F44336';

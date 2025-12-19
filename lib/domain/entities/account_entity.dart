@@ -1,6 +1,6 @@
+// lib/domain/entities/account_entity.dart
 import '../enums/account_type_enum.dart';
 import '../patterns/states/account_state.dart';
-
 
 abstract class AccountEntity {
   final int id;
@@ -16,6 +16,11 @@ abstract class AccountEntity {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  // إضافة بيانات المستخدم
+  final String? userName;
+  final String? userEmail;
+  final String? userPhone;
+
   AccountEntity({
     required this.id,
     required this.publicId,
@@ -29,9 +34,11 @@ abstract class AccountEntity {
     this.closedAt,
     required this.createdAt,
     required this.updatedAt,
+    this.userName,
+    this.userEmail,
+    this.userPhone,
   });
 
-  // في AccountEntity.dart
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -46,13 +53,15 @@ abstract class AccountEntity {
       'closed_at': closedAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'user_name': userName,
+      'user_email': userEmail,
+      'user_phone': userPhone,
     };
   }
 
-  // Check if account is a group
+
   bool get isGroup => type == AccountTypeEnum.GROUP;
 
-  // State transition methods (matching backend)
   bool canTransitionTo(String targetState) {
     return state.canTransitionTo(targetState);
   }
@@ -61,21 +70,17 @@ abstract class AccountEntity {
     return state.transitionError(targetState);
   }
 
-  // Change state with validation
   void changeState(String newState) {
     if (!canTransitionTo(newState)) {
       throw StateError(transitionError(newState));
     }
-    // State will be changed by repository
   }
 
-  // Business operations (will be handled by use cases)
   String deposit(double amount) {
     if (!state.canDeposit) {
-      throw StateError('لا يمكن الإيداع: الحساب ${state.arabicName}');
+      throw StateError('لا يمكن الإيداع: الحساب ${state}');
     }
 
-    // Update balance
     balance += amount;
 
     return 'تم إيداع \$${amount.toStringAsFixed(2)} بنجاح';
@@ -83,7 +88,7 @@ abstract class AccountEntity {
 
   String withdraw(double amount) {
     if (!state.canWithdraw) {
-      throw StateError('لا يمكن السحب: الحساب ${state.arabicName}');
+      throw StateError('لا يمكن السحب: الحساب ${state}');
     }
 
     if (amount > balance) {
@@ -94,52 +99,56 @@ abstract class AccountEntity {
     return 'تم سحب \$${amount.toStringAsFixed(2)} بنجاح';
   }
 
-  // Helper properties for UI
-  String get holderName => 'User $userId'; // Would come from user service
-  String get status => state.arabicName;
+  String get holderName => userName ?? 'User $userId';
   String get statusColorHex => state.colorHex;
 
-  // Check if account can be deleted (only closed accounts)
   bool get canDelete => state.name == 'closed';
-}
 
-// Transaction entity (if needed)
-class Transaction {
-  final String id;
-  final String type; // deposit, withdrawal, transfer
-  final double amount;
-  final DateTime date;
-  final String description;
-  final double balanceAfter;
-
-  Transaction({
-    required this.id,
-    required this.type,
-    required this.amount,
-    required this.date,
-    required this.description,
-    required this.balanceAfter,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'type': type,
-      'amount': amount,
-      'date': date.toIso8601String(),
-      'description': description,
-      'balanceAfter': balanceAfter,
-    };
+  // In AccountEntity class, add these methods:
+  bool canDeposit() {
+    return state.name == 'active';
   }
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      id: json['id'],
-      type: json['type'],
-      amount: json['amount'].toDouble(),
-      date: DateTime.parse(json['date']),
-      description: json['description'],
-      balanceAfter: json['balanceAfter'].toDouble(),
-    );
+  bool canWithdraw() {
+    if (state.name != 'active') return false;
+    return balance > 0;
+  }
+
+  bool canTransfer() {
+    return state.name == 'active';
+  }
+
+  String? validateDeposit(double amount) {
+    if (!canDeposit()) {
+      return 'Cannot deposit: Account is ${state.name}';
+    }
+    if (amount <= 0) {
+      return 'Amount must be greater than zero';
+    }
+    return null;
+  }
+
+  String? validateWithdraw(double amount) {
+    if (!canWithdraw()) {
+      return 'Cannot withdraw: Account is ${state.name}';
+    }
+    if (amount <= 0) {
+      return 'Amount must be greater than zero';
+    }
+    if (amount > balance) {
+      return 'Insufficient balance. Current balance: \$${balance.toStringAsFixed(2)}';
+    }
+    return null;
+  }
+
+  String? validateTransfer(double amount, AccountEntity destinationAccount) {
+    final withdrawError = validateWithdraw(amount);
+    if (withdrawError != null) return withdrawError;
+
+    if (!destinationAccount.canDeposit()) {
+      return 'Cannot transfer to destination account: ${destinationAccount.state.name}';
+    }
+
+    return null;
   }
 }

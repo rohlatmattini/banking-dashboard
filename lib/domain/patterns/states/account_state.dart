@@ -1,8 +1,8 @@
 abstract class AccountState {
   // Basic properties
   String get name; // 'active', 'frozen', etc.
-  String get arabicName;
   String get colorHex;
+  String get englishName; // Added English name property
 
   // Transition validation (matching backend)
   bool canTransitionTo(String targetState);
@@ -16,4 +16,5 @@ abstract class AccountState {
   bool get canClose;
   bool get canDelete;
   bool get canChangeState;
+
 }

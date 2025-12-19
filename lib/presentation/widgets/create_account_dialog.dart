@@ -9,7 +9,8 @@ class CreateAccountDialog extends StatefulWidget {
   String? monthlyLimit,
   }) onCreate;
 
-  const CreateAccountDialog({super.key, required this.onCreate});
+  const CreateAccountDialog({super.key, required this.onCreate,
+  });
 
   @override
   State<CreateAccountDialog> createState() => _CreateAccountDialogState();
@@ -39,7 +40,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(
-        'إنشاء حساب جديد',
+        'Create New Account',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 20,
@@ -52,20 +53,24 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // نوع الحساب
+              // Account Type
               DropdownButtonFormField<AccountTypeEnum>(
                 value: _selectedType,
                 decoration: InputDecoration(
-                  labelText: 'نوع الحساب',
+                  labelText: 'Account Type',
+                  labelStyle: TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  prefixIcon: const Icon(Icons.account_balance),
+                  prefixIcon: Icon(Icons.account_balance, color: Colors.grey.shade600),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.teal),
+                  ),
                 ),
                 items: _availableTypes.map((type) {
                   return DropdownMenuItem(
                     value: type,
-                    child: Text(type.arabicName),
+                    child: Text(type.englishName),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -75,33 +80,38 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
                 },
                 validator: (value) {
                   if (value == null) {
-                    return 'الرجاء اختيار نوع الحساب';
+                    return 'Please select account type';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
 
-              // الحد اليومي
+              // Daily Limit
               TextFormField(
                 controller: _dailyLimitController,
+                cursorColor: Colors.teal,
                 decoration: InputDecoration(
-                  labelText: 'الحد اليومي (اختياري)',
+                  labelText: 'Daily Limit (Optional)',
+                  labelStyle: TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  prefixIcon: const Icon(Icons.today),
-                  suffixText: 'دولار',
+                  prefixIcon: Icon(Icons.today, color: Colors.grey.shade600),
+                    suffixText: '\$',
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.teal),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value != null && value.isNotEmpty) {
                     final num = double.tryParse(value);
                     if (num == null) {
-                      return 'الرجاء إدخال رقم صحيح';
+                      return 'Please enter a valid number';
                     }
                     if (num <= 0) {
-                      return 'يجب أن يكون الرقم أكبر من الصفر';
+                      return 'Number must be greater than zero';
                     }
                   }
                   return null;
@@ -109,33 +119,38 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
               ),
               const SizedBox(height: 12),
 
-              // الحد الشهري
+              // Monthly Limit
               TextFormField(
                 controller: _monthlyLimitController,
+                cursorColor: Colors.teal,
                 decoration: InputDecoration(
-                  labelText: 'الحد الشهري (اختياري)',
+                  labelText: 'Monthly Limit (Optional)',
+                  labelStyle: TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  prefixIcon: const Icon(Icons.calendar_today),
-                  suffixText: 'دولار',
+                  prefixIcon: Icon(Icons.calendar_today, color: Colors.grey.shade600),
+                    suffixText: '\$',
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.teal),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value != null && value.isNotEmpty) {
                     final num = double.tryParse(value);
                     if (num == null) {
-                      return 'الرجاء إدخال رقم صحيح';
+                      return 'Please enter a valid number';
                     }
                     if (num <= 0) {
-                      return 'يجب أن يكون الرقم أكبر من الصفر';
+                      return 'Number must be greater than zero';
                     }
 
-                    // التحقق إذا كان الحد اليومي موجود
+                    // Check if daily limit exists
                     if (_dailyLimitController.text.isNotEmpty) {
                       final daily = double.tryParse(_dailyLimitController.text) ?? 0;
                       if (num < daily) {
-                        return 'الحد الشهري يجب أن يكون أكبر من الحد اليومي';
+                        return 'Monthly limit must be greater than daily limit';
                       }
                     }
                   }
@@ -147,7 +162,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
               const Divider(),
               const SizedBox(height: 10),
 
-              // معلومات توضيحية
+              // Information Section
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -158,7 +173,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'ملاحظات:',
+                      'Notes:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
@@ -166,15 +181,15 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      '• سيتم إنشاء الحساب تحت اسم المستخدم الحالي',
+                      '• Account will be created under the current user',
                       style: TextStyle(fontSize: 12),
                     ),
                     const Text(
-                      '• الحساب سيكون نشطًا مباشرة بعد الإنشاء',
+                      '• Account will be active immediately after creation',
                       style: TextStyle(fontSize: 12),
                     ),
                     const Text(
-                      '• يمكنك تعديل الحدود لاحقًا',
+                      '• You can modify limits later',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -187,7 +202,10 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
       actions: [
         TextButton(
           onPressed: Get.back,
-          child: const Text('إلغاء'),
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.teal,
+          ),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: () {
@@ -208,7 +226,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
             backgroundColor: Colors.teal,
             foregroundColor: Colors.white,
           ),
-          child: const Text('إنشاء'),
+          child: const Text('Create'),
         ),
       ],
     );

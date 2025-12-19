@@ -51,6 +51,7 @@ class BankingApp extends StatelessWidget {
           name: '/accounts/onboard',
           page: () => OnboardCustomerPage(),
         ),
+
         GetPage(
           name: '/reports',
           page: () => ReportsPage(),

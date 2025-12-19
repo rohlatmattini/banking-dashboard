@@ -8,7 +8,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('نظام البنك المتقدم', style: TextStyle(fontFamily: 'Cairo',color: Colors.white)),
+        title: const Text('Banking System', style: TextStyle(fontFamily: 'Cairo', color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.teal[700],
       ),
@@ -19,12 +19,12 @@ class HomePage extends StatelessWidget {
             const Icon(Icons.account_balance, size: 100, color: Colors.teal),
             const SizedBox(height: 30),
             const Text(
-              'مرحبًا بك في نظام البنك المتقدم',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Colors.teal),
+              'Welcome to Advanced Banking System',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.teal),
             ),
             const SizedBox(height: 10),
             const Text(
-              'نظام متكامل لإدارة الحسابات والمعاملات والتقارير',
+              'An integrated system for managing accounts, transactions, and reports',
               style: TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
@@ -35,8 +35,8 @@ class HomePage extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () => Get.toNamed('/accounts'),
-                    icon: const Icon(Icons.account_balance_wallet,color: Colors.white),
-                    label: const Text('إدارة الحسابات',style: TextStyle(color: Colors.white )),
+                    icon: const Icon(Icons.account_balance_wallet, color: Colors.white),
+                    label: const Text('Manage Accounts', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,
                       minimumSize: const Size(double.infinity, 50),
@@ -45,8 +45,8 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 15),
                   ElevatedButton.icon(
                     onPressed: () => Get.toNamed('/accounts/onboard'),
-                    icon: const Icon(Icons.person_add,color: Colors.white),
-                    label: const Text('إضافة عميل جديد',style:TextStyle(color: Colors.white )),
+                    icon: const Icon(Icons.person_add, color: Colors.white),
+                    label: const Text('Add New Customer', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,
                       minimumSize: const Size(double.infinity, 50),
@@ -55,8 +55,8 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 15),
                   ElevatedButton.icon(
                     onPressed: () => Get.toNamed('/reports'),
-                    icon: const Icon(Icons.assessment,color: Colors.white),
-                    label: const Text('التقارير والتحليلات',style:TextStyle(color: Colors.white )),
+                    icon: const Icon(Icons.assessment, color: Colors.white),
+                    label: const Text('Reports & Analytics', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,
                       minimumSize: const Size(double.infinity, 50),

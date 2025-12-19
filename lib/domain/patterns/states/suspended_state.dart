@@ -5,7 +5,7 @@ class SuspendedState implements AccountState {
   String get name => 'suspended';
 
   @override
-  String get arabicName => 'موقوف';
+  String get englishName => 'suspended';
 
   @override
   String get colorHex => '#FF9800';

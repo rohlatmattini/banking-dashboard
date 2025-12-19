@@ -5,7 +5,7 @@ class ActiveState implements AccountState {
   String get name => 'active';
 
   @override
-  String get arabicName => 'نشط';
+  String get englishName => 'Active';
 
   @override
   String get colorHex => '#4CAF50';
@@ -17,7 +17,7 @@ class ActiveState implements AccountState {
 
   @override
   String transitionError(String targetState) {
-    return "لا يمكن الانتقال من active إلى $targetState.";
+    return "Cannot transition from active to $targetState.";
   }
 
   @override

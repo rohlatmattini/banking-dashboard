@@ -1,4 +1,6 @@
+// lib/data/datasource/api_account_data_source.dart
 import 'package:dio/dio.dart';
+import '../../domain/dtos/transaction_dto.dart';
 import 'account_data_source.dart';
 import '../model/account_model.dart';
 import '../../domain/entities/account_entity.dart';
@@ -7,30 +9,26 @@ import '../../domain/dtos/onboard_customer_dto.dart';
 
 class ApiAccountDataSource implements AccountDataSource {
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'http://127.0.0.1:8000/api/v1',
-    connectTimeout: const Duration(seconds: 30),
-    receiveTimeout: const Duration(seconds: 30),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-  ));
+      baseUrl: 'http://127.0.0.1:8000/api/v1',
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
 
-  // التوكن الثابت - في الواقع يجب أن يأتي من خدمة المصادقة
-  static const String _authToken = '1|oev4N3FtHvg5vuOzi4OxdcKkmY0cfMqNU7c5J2mt5d033291';
+      }));
+
+  static const String _authToken = '19|NO0RBzShYkdX8fVns3QgEWYXLseUP0wI2ko9UFjK27f982a4';
 
   ApiAccountDataSource() {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
-        // إضافة التوكن للطلبات
         options.headers['Authorization'] = 'Bearer $_authToken';
         return handler.next(options);
       },
       onError: (error, handler) {
-        // معالجة الأخطاء
         if (error.response?.statusCode == 401) {
           // معالجة انتهاء صلاحية التوكن
-          // في الواقع يجب إعادة المصادقة هنا
         }
         return handler.next(error);
       },
@@ -38,26 +36,20 @@ class ApiAccountDataSource implements AccountDataSource {
   }
 
   @override
-  Future<List<AccountEntity>> fetchAccounts() async {
+  Future<List<Map<String, dynamic>>> fetchUsersWithAccounts() async {
     try {
-      final response = await _dio.get('/accounts');
+      final response = await _dio.get('/accounts/admin/users-with-accounts');
 
-      // تحقق من بنية الرد (قد تكون البيانات في 'data' أو مباشرة)
       if (response.data is Map && response.data.containsKey('data')) {
-        final List<dynamic> data = response.data['data'];
-        return data.map((json) => AccountModel.fromJson(json)).toList();
-      } else if (response.data is List) {
-        return (response.data as List)
-            .map((json) => AccountModel.fromJson(json))
-            .toList();
+        return List<Map<String, dynamic>>.from(response.data['data']);
       }
 
-      throw Exception('Invalid response format');
+      return [];
     } on DioException catch (e) {
       if (e.response != null) {
-        throw Exception('Failed to fetch accounts: ${e.response!.data}');
+        throw Exception('Failed to fetch users: ${e.response!.data}');
       } else {
-        throw Exception('Failed to fetch accounts: ${e.message}');
+        throw Exception('Failed to fetch users: ${e.message}');
       }
     }
   }
@@ -104,30 +96,6 @@ class ApiAccountDataSource implements AccountDataSource {
   }
 
   @override
-  Future<AccountEntity> updateAccount(AccountEntity account) async {
-    try {
-      final response = await _dio.put('/accounts/${account.publicId}', data: {
-        'state': account.state.name,
-        'balance': account.balance,
-        'daily_limit': account.dailyLimit,
-        'monthly_limit': account.monthlyLimit,
-      });
-
-      if (response.data is Map && response.data.containsKey('data')) {
-        return AccountModel.fromJson(response.data['data']);
-      }
-
-      return AccountModel.fromJson(response.data);
-    } on DioException catch (e) {
-      if (e.response != null) {
-        throw Exception('Failed to update account: ${e.response!.data}');
-      } else {
-        throw Exception('Failed to update account: ${e.message}');
-      }
-    }
-  }
-// في ملف api_account_data_source.dart، أضف هذه الدالة:
-  @override
   Future<AccountEntity> createUserAccount({
     required int userId,
     required AccountTypeEnum type,
@@ -154,21 +122,10 @@ class ApiAccountDataSource implements AccountDataSource {
       }
     }
   }
-  @override
-  Future<void> deleteAccount(String publicId) async {
-    try {
-      await _dio.delete('/accounts/$publicId');
-    } on DioException catch (e) {
-      if (e.response != null) {
-        throw Exception('Failed to delete account: ${e.response!.data}');
-      } else {
-        throw Exception('Failed to delete account: ${e.message}');
-      }
-    }
-  }
 
-  // API الجديدة لإضافة عميل جديد
-// API الجديدة لإضافة عميل جديد
+  // lib/data/datasource/api_account_data_source.dart
+
+  @override
   Future<Map<String, dynamic>> onboardCustomer(OnboardCustomerData data) async {
     try {
       final Map<String, dynamic> requestData = {
@@ -183,21 +140,17 @@ class ApiAccountDataSource implements AccountDataSource {
           };
 
           if (account.dailyLimit != null && account.dailyLimit!.isNotEmpty) {
-            // حاول تحويل النص إلى رقم
             try {
               accountData['daily_limit'] = double.parse(account.dailyLimit!);
             } catch (e) {
-              // إذا فشل التحويل، أرسله كنص
               accountData['daily_limit'] = account.dailyLimit;
             }
           }
 
           if (account.monthlyLimit != null && account.monthlyLimit!.isNotEmpty) {
-            // حاول تحويل النص إلى رقم
             try {
               accountData['monthly_limit'] = double.parse(account.monthlyLimit!);
             } catch (e) {
-              // إذا فشل التحويل، أرسله كنص
               accountData['monthly_limit'] = account.monthlyLimit;
             }
           }
@@ -206,14 +159,15 @@ class ApiAccountDataSource implements AccountDataSource {
         }).toList(),
       };
 
-      print('Sending data to API: $requestData'); // للتصحيح
+      print('Sending data to API: $requestData');
       final response = await _dio.post('/accounts/onboard', data: requestData);
 
       return response.data;
     } on DioException catch (e) {
       if (e.response != null) {
         final errorData = e.response!.data;
-        final errorMessage = errorData is Map && errorData.containsKey('message')
+        final errorMessage = errorData is Map &&
+            errorData.containsKey('message')
             ? errorData['message']
             : 'Failed to onboard customer';
         throw Exception('$errorMessage (${e.response!.statusCode})');
@@ -221,8 +175,9 @@ class ApiAccountDataSource implements AccountDataSource {
         throw Exception('Failed to onboard customer: ${e.message}');
       }
     }
+
   }
-  // Additional methods matching backend API
+
   @override
   Future<AccountEntity> updateState(String publicId, String newState) async {
     try {
@@ -245,32 +200,110 @@ class ApiAccountDataSource implements AccountDataSource {
     }
   }
 
+// In deposit function:
   @override
-  Future<AccountEntity> createChildAccount({
-    required int userId,
-    required int groupId,
-    required AccountTypeEnum type,
-    String? dailyLimit,
-    String? monthlyLimit,
-  }) async {
+  Future<Map<String, dynamic>> deposit(DepositData data, String idempotencyKey) async {
     try {
-      final response = await _dio.post('/accounts/open', data: {
-        'user_id': userId,
-        'type': type.value,
-        'daily_limit': dailyLimit,
-        'monthly_limit': monthlyLimit,
-      });
+      final response = await _dio.post(
+        '/transactions/deposit',
+        data: data.toJson(),
+        options: Options(
+          headers: {
+            'Idempotency-Key': idempotencyKey,
+            'Authorization': 'Bearer $_authToken',
+          },
+        ),
+      );
 
-      if (response.data is Map && response.data.containsKey('data')) {
-        return AccountModel.fromJson(response.data['data']);
-      }
-
-      return AccountModel.fromJson(response.data);
+      return response.data;
     } on DioException catch (e) {
-      if (e.response != null) {
-        throw Exception('Failed to create child account: ${e.response!.data}');
+      if (e.response?.statusCode == 409) {
+        throw Exception('Request conflict detected. Please try again.');
+      } else if (e.response?.statusCode == 403) {
+        throw Exception('Account is not active. Cannot deposit.');
+      } else if (e.response?.statusCode == 400) {
+        throw Exception('Invalid data: ${e.response!.data}');
+      } else if (e.response != null) {
+        final errorData = e.response!.data;
+        final errorMessage = errorData is Map && errorData.containsKey('message')
+            ? errorData['message']
+            : 'Deposit failed: ${e.response!.statusCode}';
+        throw Exception(errorMessage);
       } else {
-        throw Exception('Failed to create child account: ${e.message}');
+        throw Exception('Deposit failed: ${e.message}');
+      }
+    }
+  }
+
+// In withdraw function:
+  @override
+  Future<Map<String, dynamic>> withdraw(WithdrawData data, String idempotencyKey) async {
+    try {
+      final response = await _dio.post(
+        '/transactions/withdraw',
+        data: data.toJson(),
+        options: Options(
+          headers: {
+            'Idempotency-Key': idempotencyKey,
+            'Authorization': 'Bearer $_authToken',
+          },
+        ),
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 409) {
+        throw Exception('Request conflict detected. Please try again.');
+      } else if (e.response?.statusCode == 403) {
+        throw Exception('Account is not active. Cannot withdraw.');
+      } else if (e.response?.statusCode == 400) {
+        throw Exception('Invalid data: ${e.response!.data}');
+      } else if (e.response?.statusCode == 422) {
+        throw Exception('Insufficient balance.');
+      } else if (e.response != null) {
+        final errorData = e.response!.data;
+        final errorMessage = errorData is Map && errorData.containsKey('message')
+            ? errorData['message']
+            : 'Withdrawal failed: ${e.response!.statusCode}';
+        throw Exception(errorMessage);
+      } else {
+        throw Exception('Withdrawal failed: ${e.message}');
+      }
+    }
+  }
+
+// In transfer function:
+  @override
+  Future<Map<String, dynamic>> transfer(TransferData data, String idempotencyKey) async {
+    try {
+      final response = await _dio.post(
+        '/transactions/transfer',
+        data: data.toJson(),
+        options: Options(
+          headers: {
+            'Idempotency-Key': idempotencyKey,
+          },
+        ),
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 409) {
+        throw Exception('Request conflict detected. Please try again.');
+      } else if (e.response?.statusCode == 403) {
+        throw Exception('One or both accounts are not active. Cannot transfer.');
+      } else if (e.response?.statusCode == 400) {
+        throw Exception('Invalid data: ${e.response!.data}');
+      } else if (e.response?.statusCode == 422) {
+        throw Exception('Insufficient balance or transfer limit exceeded.');
+      } else if (e.response != null) {
+        final errorData = e.response!.data;
+        final errorMessage = errorData is Map && errorData.containsKey('message')
+            ? errorData['message']
+            : 'Transfer failed: ${e.response!.statusCode}';
+        throw Exception(errorMessage);
+      } else {
+        throw Exception('Transfer failed: ${e.message}');
       }
     }
   }
