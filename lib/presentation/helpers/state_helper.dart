@@ -16,7 +16,7 @@ class StateHelper {
       case 'suspended':
         return Colors.teal;
       case 'closed':
-        return Colors.teal;
+        return Colors.red;
       default:
         return Colors.teal;
     }

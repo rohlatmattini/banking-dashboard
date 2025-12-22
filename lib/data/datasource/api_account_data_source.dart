@@ -16,15 +16,15 @@ import '../../domain/dtos/onboard_customer_dto.dart';
 class ApiAccountDataSource implements AccountDataSource {
   final Dio _dio = Dio(BaseOptions(
       baseUrl: 'http://127.0.0.1:8000/api/v1',
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
 
       }));
 
-  static const String _authToken = '25|4fXKhDxCzF5ikfKTp3EO3VBj2wNpQd6SJIQdaxkH3573d912';
+  static const String _authToken = '1|8d9DxyeC3oYBWMONOzpOJYBozOspoVy9EUzgnVkbf028fb46';
 
   ApiAccountDataSource() {
     _dio.interceptors.add(InterceptorsWrapper(
@@ -34,7 +34,7 @@ class ApiAccountDataSource implements AccountDataSource {
       },
       onError: (error, handler) {
         if (error.response?.statusCode == 401) {
-          // معالجة انتهاء صلاحية التوكن
+          print(" The token has expired");
         }
         return handler.next(error);
       },
@@ -129,7 +129,6 @@ class ApiAccountDataSource implements AccountDataSource {
     }
   }
 
-  // lib/data/datasource/api_account_data_source.dart
 
   @override
   Future<Map<String, dynamic>> onboardCustomer(OnboardCustomerData data) async {
@@ -241,7 +240,6 @@ class ApiAccountDataSource implements AccountDataSource {
     }
   }
 
-// In withdraw function:
   @override
   Future<Map<String, dynamic>> withdraw(WithdrawData data, String idempotencyKey) async {
     try {
@@ -278,7 +276,7 @@ class ApiAccountDataSource implements AccountDataSource {
     }
   }
 
-// In transfer function:
+
   @override
   Future<Map<String, dynamic>> transfer(TransferData data, String idempotencyKey) async {
     try {
@@ -315,8 +313,7 @@ class ApiAccountDataSource implements AccountDataSource {
   }
 
 
-  // lib/data/datasource/api_account_data_source.dart
-// Add these methods to the class:
+
 
   @override
   Future<List<TransactionEntity>> fetchTransactions({String? scope}) async {
@@ -372,8 +369,6 @@ class ApiAccountDataSource implements AccountDataSource {
   }
 
   @override
-// lib/data/datasource/api_account_data_source.dart
-  @override
   Future<List<TransactionEntity>> fetchPendingApprovals() async {
     try {
       final response = await _dio.get('/transactions/pending-approvals');
@@ -383,7 +378,6 @@ class ApiAccountDataSource implements AccountDataSource {
       if (response.data is Map && response.data.containsKey('items')) {
         final items = List<Map<String, dynamic>>.from(response.data['items']);
 
-        // التحقق من كل item قبل تحويله
         final List<TransactionModel> transactions = [];
 
         for (var item in items) {
@@ -393,7 +387,6 @@ class ApiAccountDataSource implements AccountDataSource {
           } catch (e) {
             print('Error parsing transaction item: $e');
             print('Problematic item: $item');
-            // يمكنك تخطي هذا العنصر أو إضافة تسجيل خطأ
           }
         }
 

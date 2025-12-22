@@ -1,11 +1,10 @@
-// lib/domain/entities/transaction_detail_entity.dart
 import 'package:bankingplatform/domain/entities/transaction_entity.dart';
 
 import 'ledger_entry_entity.dart';
 
 class TransactionDetailEntity extends TransactionEntity {
   final List<LedgerEntryEntity> ledgerEntries;
-  final dynamic approval; // Can be null or approval data
+  final dynamic approval;
 
   TransactionDetailEntity({
     required super.publicId,

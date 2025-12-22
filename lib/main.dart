@@ -1,41 +1,36 @@
-import 'package:bankingplatform/presentation/controller/account_controller.dart';
 import 'package:bankingplatform/presentation/controller/approval_controller.dart';
 import 'package:bankingplatform/presentation/controller/report_controller.dart';
+import 'package:bankingplatform/presentation/controller/support_controller.dart';
 import 'package:bankingplatform/presentation/controller/transaction_controller.dart';
+import 'package:bankingplatform/presentation/pages/account_hierarchy_page.dart';
 import 'package:bankingplatform/presentation/pages/account_management_page.dart';
 import 'package:bankingplatform/presentation/pages/approvals_page.dart';
 import 'package:bankingplatform/presentation/pages/home_page.dart';
 import 'package:bankingplatform/presentation/pages/onboard_customer_page.dart';
 import 'package:bankingplatform/presentation/pages/reports_page.dart';
+import 'package:bankingplatform/presentation/pages/support_tickets_page.dart';
 import 'package:bankingplatform/presentation/pages/transaction_history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'data/datasource/api_account_data_source.dart';
-import 'data/repositories/account_repository_impl.dart';
 import 'data/repositories/report_repository_impl.dart';
+import 'package:bankingplatform/presentation/controller/enhanced_account_controller.dart';
+import 'domain/repositories/repository_builder.dart';
 
 void main() async {
   await GetStorage.init();
   runApp(BankingApp());
 }
 
-// In main.dart, update BankingApp:
 class BankingApp extends StatelessWidget {
   BankingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Initialize dependencies
-    final accountDataSource = ApiAccountDataSource();
-    final accountRepository = AccountRepositoryImpl(dataSource: accountDataSource);
+    final accountRepository = RepositoryBuilder.buildAccountRepository();
     final reportRepository = ReportRepositoryImpl();
+    final supportRepository = RepositoryBuilder.buildSupportRepository();
 
-    // Initialize ApprovalController early
-    final approvalController = ApprovalController(repository: accountRepository);
-
-    // Fetch pending approvals on app start
-    approvalController.fetchPendingApprovals();
 
     return GetMaterialApp(
       title: 'Banking System',
@@ -53,8 +48,8 @@ class BankingApp extends StatelessWidget {
           name: '/accounts',
           page: () => AccountManagementPage(),
           binding: BindingsBuilder(() {
-            Get.put(AccountController(repository: accountRepository));
-            Get.put(approvalController); // Add approval controller here
+            Get.put(EnhancedAccountController(repository: accountRepository));
+            Get.put(ApprovalController(repository: accountRepository));
           }),
         ),
         GetPage(
@@ -79,9 +74,22 @@ class BankingApp extends StatelessWidget {
           name: '/approvals',
           page: () => ApprovalsPage(),
           binding: BindingsBuilder(() {
-            Get.put(approvalController);
+            Get.put(ApprovalController(repository: accountRepository));
           }),
         ),
+
+        GetPage(
+          name: '/support',
+          page: () => SupportTicketsPage(),
+          binding: BindingsBuilder(() {
+            Get.put(SupportController(repository: supportRepository));
+          }),
+        ),
+        GetPage(
+          name: '/accounts/hierarchy',
+          page: () => AccountHierarchyPage(),
+        ),
+
       ],
       debugShowCheckedModeBanner: false,
     );

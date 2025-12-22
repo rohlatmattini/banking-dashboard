@@ -146,7 +146,6 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
                       return 'Number must be greater than zero';
                     }
 
-                    // Check if daily limit exists
                     if (_dailyLimitController.text.isNotEmpty) {
                       final daily = double.tryParse(_dailyLimitController.text) ?? 0;
                       if (num < daily) {
@@ -176,7 +175,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
                       'Notes:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.teal,
                       ),
                     ),
                     const SizedBox(height: 8),

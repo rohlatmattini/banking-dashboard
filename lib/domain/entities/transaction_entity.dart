@@ -1,6 +1,3 @@
-// lib/domain/entities/transaction_entity.dart
-// lib/domain/entities/transaction_entity.dart
-// lib/domain/entities/transaction_entity.dart
 abstract class TransactionEntity {
   final String publicId;
   final TransactionType type;
@@ -8,8 +5,8 @@ abstract class TransactionEntity {
   final double amount;
   final String currency;
   final String description;
-  final DateTime? postedAt; // nullable
-  final DateTime createdAt; // مطلوب
+  final DateTime? postedAt;
+  final DateTime createdAt;
   final int? sourceAccountId;
   final int? destinationAccountId;
   final int initiatorUserId;
@@ -21,8 +18,8 @@ abstract class TransactionEntity {
     required this.amount,
     required this.currency,
     required this.description,
-    this.postedAt, // nullable
-    required this.createdAt, // مطلوب
+    this.postedAt,
+    required this.createdAt,
     this.sourceAccountId,
     this.destinationAccountId,
     required this.initiatorUserId,
@@ -46,13 +43,12 @@ enum TransactionType {
   }
 }
 
-// lib/domain/entities/transaction_entity.dart
 enum TransactionStatus {
   PENDING('pending'),
-  PENDING_APPROVAL('pending_approval'), // أضف هذا
+  PENDING_APPROVAL('pending_approval'),
   POSTED('posted'),
-  APPROVED('approved'), // أضف هذا
-  REJECTED('rejected'), // أضف هذا
+  APPROVED('approved'),
+  REJECTED('rejected'),
   FAILED('failed'),
   CANCELLED('cancelled');
 

@@ -1,13 +1,12 @@
-// lib/presentation/pages/account_management_page.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/account_controller.dart';
 import '../controller/approval_controller.dart';
+import '../controller/enhanced_account_controller.dart';
 import '../widgets/user_account_card.dart';
 import '../pages/onboard_customer_page.dart';
 
 class AccountManagementPage extends StatelessWidget {
-  final AccountController controller = Get.find<AccountController>();
+  final EnhancedAccountController controller = Get.find<EnhancedAccountController>();
 
   AccountManagementPage({super.key});
 
@@ -24,7 +23,7 @@ class AccountManagementPage extends StatelessWidget {
         elevation: 2,
         leading:   IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: ()=>Get.back(),
+          onPressed: () => Get.toNamed('/'),
 
         ),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -38,6 +37,11 @@ class AccountManagementPage extends StatelessWidget {
             icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: () => controller.fetchUsersWithAccounts(),
             tooltip: 'Refresh',
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_tree, color: Colors.white),
+            onPressed: () => Get.toNamed('/accounts/hierarchy'),
+            tooltip: 'View Account Hierarchy',
           ),
           // In AccountManagementPage AppBar actions:
           Obx(() {
@@ -117,7 +121,7 @@ class _AccountManagementContentState extends State<_AccountManagementContent> {
   int _selectedFilter = -1;
 
   List<Map<String, dynamic>> get filteredUsers {
-    final controller = Get.find<AccountController>();
+    final controller = Get.find<EnhancedAccountController>();
     var filtered = controller.usersWithAccounts.toList();
 
     // Filter by search text
@@ -146,7 +150,7 @@ class _AccountManagementContentState extends State<_AccountManagementContent> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<AccountController>();
+    final controller = Get.find<EnhancedAccountController >();
     final usersToShow = filteredUsers;
 
     return Column(
@@ -307,7 +311,7 @@ class _AccountManagementContentState extends State<_AccountManagementContent> {
   }
 
   Widget _buildOverallStatistics() {
-    final controller = Get.find<AccountController>();
+    final controller = Get.find<EnhancedAccountController>(); // Changed from AccountController
     int totalUsers = controller.usersWithAccounts.length;
     int totalAccounts = 0;
     int activeAccounts = 0;

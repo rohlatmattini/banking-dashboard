@@ -1,4 +1,3 @@
-// lib/presentation/controller/approval_controller.dart
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../domain/repositories/account_repository.dart';
@@ -50,12 +49,10 @@ class ApprovalController extends GetxController {
           decisionData
       );
 
-      // Remove from pending list
       pendingApprovals.removeWhere((t) => t.publicId == transactionId);
 
       _showSuccess('Decision submitted successfully');
 
-      // Refresh the list
       await fetchPendingApprovals();
 
     } catch (e) {

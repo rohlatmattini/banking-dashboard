@@ -1,16 +1,15 @@
-// lib/presentation/widgets/user_account_card.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../domain/entities/account_entity.dart';
 import '../../domain/enums/account_type_enum.dart';
 import '../../domain/dtos/open_account_dto.dart';
-import '../controller/account_controller.dart';
+import '../controller/enhanced_account_controller.dart';
 import '../widgets/create_account_dialog.dart';
 import '../helpers/state_helper.dart';
 
 class UserAccountCard extends StatelessWidget {
   final Map<String, dynamic> userData;
-  final AccountController controller;
+  final EnhancedAccountController  controller;
 
   const UserAccountCard({
     super.key,
@@ -34,18 +33,14 @@ class UserAccountCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // User Information
             _buildUserInfo(),
             const Divider(height: 20),
 
-            // Statistics
             _buildStatistics(stats),
             const Divider(height: 20),
 
-            // Add Account Button
             _buildAddAccountButton(),
 
-            // Accounts List
             if (accounts.isNotEmpty) ...[
               const SizedBox(height: 16),
               _buildAccountsList(accounts),
@@ -349,7 +344,6 @@ class UserAccountCard extends StatelessWidget {
     );
   }
 
-  // دالة لعرض قائمة العمليات للمحاسبة
   void _showTransactionMenu(Map<String, dynamic> account) {
     Get.bottomSheet(
       Container(
@@ -479,7 +473,6 @@ class UserAccountCard extends StatelessWidget {
     );
   }
 
-  // دالة الإيداع
   void _showDepositDialog(Map<String, dynamic> account) {
     final amountController = TextEditingController();
     final descriptionController = TextEditingController();
@@ -565,7 +558,6 @@ class UserAccountCard extends StatelessWidget {
     );
   }
 
-  // دالة السحب
   void _showWithdrawDialog(Map<String, dynamic> account) {
     final amountController = TextEditingController();
     final descriptionController = TextEditingController();
@@ -664,7 +656,6 @@ class UserAccountCard extends StatelessWidget {
     );
   }
 
-  // دالة التحويل
   void _showTransferDialog(Map<String, dynamic> sourceAccount) {
     final amountController = TextEditingController();
     final destinationController = TextEditingController();
@@ -770,7 +761,6 @@ class UserAccountCard extends StatelessWidget {
     );
   }
 
-  // دالة عرض تفاصيل الحساب
   void _showAccountDetails(Map<String, dynamic> account) {
     Get.dialog(
       AlertDialog(
@@ -796,7 +786,7 @@ class UserAccountCard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: Get.back,
-            child: const Text('Close'),
+            child: const Text('Close',style: TextStyle(color: Colors.teal),),
           ),
         ],
       ),
@@ -825,7 +815,6 @@ class UserAccountCard extends StatelessWidget {
     );
   }
 
-  // Helper Methods
   IconData _getTypeIcon(String type) {
     switch (type) {
       case 'savings':
@@ -901,7 +890,7 @@ class UserAccountCard extends StatelessWidget {
       case 'suspended':
         return Colors.teal;
       case 'closed':
-        return Colors.teal;
+        return Colors.red;
       default:
         return Colors.teal;
     }

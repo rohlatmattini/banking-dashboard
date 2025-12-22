@@ -19,7 +19,6 @@ enum AccountTypeEnum {
     );
   }
 
-  // Add toString method to display English name
   @override
   String toString() => englishName;
 }

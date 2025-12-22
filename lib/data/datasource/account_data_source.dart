@@ -18,7 +18,7 @@ abstract class AccountDataSource {
     String? dailyLimit,
     String? monthlyLimit,
   });
-  Future<Map<String, dynamic>> onboardCustomer(OnboardCustomerData data); // تغيير النوع هنا
+  Future<Map<String, dynamic>> onboardCustomer(OnboardCustomerData data);
 
   Future<List<TransactionEntity>> fetchTransactions({String? scope});
   Future<TransactionDetailEntity> fetchTransactionDetail(String transactionId, {String? scope});

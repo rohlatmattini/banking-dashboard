@@ -21,11 +21,9 @@ class TransactionDetailModel extends TransactionDetailEntity {
     super.approval,
   });
 
-// lib/data/model/transaction_detail_model.dart
   factory TransactionDetailModel.fromJson(Map<String, dynamic> json) {
     final data = json['data'] ?? json;
 
-    // دالة مساعدة للتعامل مع التواريخ
     DateTime? parseNullableDateTime(dynamic value) {
       if (value == null || value.toString().isEmpty) {
         return null;
@@ -37,7 +35,6 @@ class TransactionDetailModel extends TransactionDetailEntity {
       }
     }
 
-    // تحويل ledger entries
     List<LedgerEntryModel> parseLedgerEntries(dynamic entries) {
       if (entries == null || entries is! List) {
         return [];

@@ -51,13 +51,12 @@ class AccountModel extends AccountEntity {
       publicId = '';
     }
 
-    // Handle parent_public_id from API response
     final parentId = json['parent_public_id']?.toString();
 
     return AccountModel(
       id: intId,
       publicId: publicId,
-      userId: 0, // سيتم تعبئته من البيانات الخارجية
+      userId: 0,
       parentId: parentId != null ? int.tryParse(parentId) : null,
       type: AccountTypeEnum.fromValue(json['type'] as String? ?? 'checking'),
       balance: (json['balance'] is String
@@ -72,11 +71,9 @@ class AccountModel extends AccountEntity {
     );
   }
 
-  // Factory method for creating account from user data
   factory AccountModel.fromUserAccountData(Map<String, dynamic> accountData, Map<String, dynamic> userData) {
     final model = AccountModel.fromJson(accountData);
 
-    // تحديث بيانات المستخدم
     return AccountModel(
       id: model.id,
       publicId: model.publicId,
@@ -116,7 +113,6 @@ class AccountModel extends AccountEntity {
     };
   }
 
-  // Factory method for creating new account
   factory AccountModel.createNew({
     required int userId,
     required AccountTypeEnum type,

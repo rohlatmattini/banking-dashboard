@@ -16,10 +16,8 @@ class TransactionModel extends TransactionEntity {
     required super.initiatorUserId,
   });
 
-// lib/data/model/transaction_model.dart
-// lib/data/model/transaction_model.dart
+
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
-    // دالة مساعدة مشتركة
     DateTime? parseNullableDateTime(dynamic value) {
       if (value == null || value.toString().isEmpty) {
         return null;

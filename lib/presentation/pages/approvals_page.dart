@@ -17,7 +17,7 @@ class ApprovalsPage extends StatelessWidget {
           'Pending Approvals',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.teal[700], // نفس لون صفحة المعاملات
+        backgroundColor: Colors.teal[700],
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -114,7 +114,6 @@ class ApprovalsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header with Type and Amount
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -252,7 +251,7 @@ class ApprovalsPage extends StatelessWidget {
     Get.dialog(
       AlertDialog(
         title: Text(
-          '${isApprove ? 'Approve' : 'Reject'} Transaction?',
+          '${isApprove ? 'approve' : 'Reject'} Transaction?',
           style: TextStyle(color: isApprove ? Colors.teal : Colors.red),
         ),
         content: Column(

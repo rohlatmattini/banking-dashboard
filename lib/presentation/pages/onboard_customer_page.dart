@@ -23,7 +23,6 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
   final ApiAccountDataSource _dataSource = ApiAccountDataSource();
   bool _isLoading = false;
 
-  // Available account types
   final List<AccountTypeEnum> _availableTypes = [
     AccountTypeEnum.CHECKING,
     AccountTypeEnum.SAVINGS,
@@ -540,10 +539,8 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
         accounts: _accounts,
       );
 
-      // Call API
       final result = await _dataSource.onboardCustomer(onboardData);
 
-      // Show success message
       Get.defaultDialog(
         title: 'Operation Successful',
         middleText:
@@ -559,7 +556,6 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
         confirmTextColor: Colors.white,
       );
 
-      // You can update account list or perform other operations here
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -575,20 +571,15 @@ class _OnboardCustomerPageState extends State<OnboardCustomerPage> {
     }
   }
 
-// دالة جديدة لتنظيف الحقول
   void _clearForm() {
-    // مسح النصوص من الحقول
     _nameController.clear();
     _emailController.clear();
     _phoneController.clear();
 
-    // مسح الحسابات المضافة
     _accounts.clear();
 
-    // إعادة تعيين حالة الفورم
     _formKey.currentState?.reset();
 
-    // تحديث الواجهة
     setState(() {});
   }
   IconData _getTypeIcon(AccountTypeEnum type) {

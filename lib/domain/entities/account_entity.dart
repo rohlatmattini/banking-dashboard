@@ -1,8 +1,7 @@
-// lib/domain/entities/account_entity.dart
 import '../enums/account_type_enum.dart';
 import '../patterns/states/account_state.dart';
 
-abstract class AccountEntity {
+ class AccountEntity {
   final int id;
   final String publicId;
   final int userId;
@@ -16,7 +15,6 @@ abstract class AccountEntity {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  // إضافة بيانات المستخدم
   final String? userName;
   final String? userEmail;
   final String? userPhone;
@@ -58,6 +56,9 @@ abstract class AccountEntity {
       'user_phone': userPhone,
     };
   }
+
+
+
 
 
   bool get isGroup => type == AccountTypeEnum.GROUP;
@@ -104,7 +105,6 @@ abstract class AccountEntity {
 
   bool get canDelete => state.name == 'closed';
 
-  // In AccountEntity class, add these methods:
   bool canDeposit() {
     return state.name == 'active';
   }

@@ -1,7 +1,6 @@
-// lib/presentation/pages/transactions_page.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; // أضف هذا الاستيراد
+import 'package:intl/intl.dart';
 
 import '../../domain/entities/ledger_entry_entity.dart';
 import '../../domain/entities/transaction_entity.dart';
@@ -48,7 +47,6 @@ class TransactionsPage extends StatelessWidget {
             },
           ),
 
-          // استخدام PopupMenuButton بدلاً من DropdownButton لتوفير المساحة
           PopupMenuButton<String>(
             icon: const Icon(Icons.filter_list, color: Colors.white),
             onSelected: (value) {
@@ -136,26 +134,13 @@ class TransactionsPage extends StatelessWidget {
 
               ],
         ),
-        // إصلاح مشكلة overflow في العمود
         trailing: SizedBox(
-          width: 120, // تحديد عرض ثابت
+          width: 120,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min, // تغيير إلى min
+            mainAxisSize: MainAxisSize.min,
             children: [
-            //  Flexible(
-              //   child: Text(
-              //     '\$${transaction.amount.toStringAsFixed(2)}',
-              //     style: TextStyle(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.bold,
-              //       color:Colors.teal,
-              //     ),
-              //     overflow: TextOverflow.ellipsis,
-              //     maxLines: 1,
-              //   ),
-              // ),
               const SizedBox(height: 1),
               Chip(
                 label: Text(

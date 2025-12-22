@@ -1,4 +1,3 @@
-// lib/domain/dtos/transaction_dto.dart
 class DepositData {
   final String accountPublicId;
   final double amount;

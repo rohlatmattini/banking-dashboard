@@ -1,4 +1,3 @@
-// lib/domain/dtos/transaction_query_dto.dart
 class TransactionQueryDto {
   final String? accountId;
   final String? scope;

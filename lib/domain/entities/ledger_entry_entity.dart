@@ -1,4 +1,3 @@
-// lib/domain/entities/ledger_entry_entity.dart
 class LedgerEntryEntity {
   final String accountPublicId;
   final EntryDirection direction;
