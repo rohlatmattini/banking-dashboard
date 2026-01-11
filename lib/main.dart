@@ -27,7 +27,7 @@ class BankingApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accountRepository = RepositoryBuilder.buildAccountRepository();
+   final accountRepository = RepositoryBuilder.buildAccountRepository();
     final reportRepository = ReportRepositoryImpl();
     final supportRepository = RepositoryBuilder.buildSupportRepository();
 

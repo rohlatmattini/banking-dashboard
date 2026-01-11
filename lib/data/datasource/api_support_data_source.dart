@@ -15,7 +15,7 @@ class ApiSupportDataSource implements SupportDataSource {
     },
   ));
 
-  static const String _authToken = '1|8d9DxyeC3oYBWMONOzpOJYBozOspoVy9EUzgnVkbf028fb46';
+  static const String _authToken = '1|w3LSq64KZLOnpkfy6orYgixBkcNjegEsK7zPB7iBc5db0ed2';
 
   ApiSupportDataSource() {
     _dio.interceptors.add(InterceptorsWrapper(

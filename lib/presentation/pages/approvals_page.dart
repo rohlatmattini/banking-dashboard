@@ -21,7 +21,7 @@ class ApprovalsPage extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
+          onPressed: () => Get.toNamed('/accounts'),
         ),
         actions: [
           Obx(() => Badge(

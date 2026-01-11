@@ -12,7 +12,7 @@ class ApiReportDataSource {
     },
   ));
 
-  static const String _authToken = '1|8d9DxyeC3oYBWMONOzpOJYBozOspoVy9EUzgnVkbf028fb46';
+  static const String _authToken = '9|siYSI26jNISEEdqppbZX7EluSDJrXy76P53W9nPka143975e';
 
   ApiReportDataSource() {
     _dio.interceptors.add(InterceptorsWrapper(

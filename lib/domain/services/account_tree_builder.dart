@@ -12,35 +12,30 @@ class AccountTreeBuilder {
     print('🔨 Building hierarchy for ${accounts.length} accounts'); // ✅ ديبق
 
     if (accounts.isEmpty) {
-      print('⚠️ No accounts to build hierarchy'); // ✅ ديبق
+      print('⚠️ No accounts to build hierarchy');
       return _createEmptyGroup();
     }
 
-    // 1. إيجاد أو إنشاء Group Account
     AccountEntity groupEntity;
     try {
       groupEntity = _findOrCreateGroupEntity(accounts);
       print('🔨 Group found/created: ${groupEntity.publicId}'); // ✅ ديبق
     } catch (e) {
-      print('❌ Error finding group: $e'); // ✅ ديبق
+      print('❌ Error finding group: $e');
       groupEntity = _createDefaultGroup(accounts.first);
     }
 
-    // 2. إنشاء المجموعة
     final group = AccountGroup(groupEntity);
     print('🔨 Group created with account: ${groupEntity.publicId}'); // ✅ ديبق
 
-    // 3. إضافة الحسابات الفرعية
     int addedCount = 0;
     for (var account in accounts) {
-      // تخطي حساب المجموعة نفسه
       if (account.id == groupEntity.id ||
           account.publicId == groupEntity.publicId) {
         continue;
       }
 
-      // إذا كان الحساب لا ينتمي لأي مجموعة (parentId = null)
-      // أو ينتمي لهذه المجموعة (parentId = groupEntity.id)
+
       if (account.parentId == null || account.parentId == groupEntity.id) {
         group.add(AccountLeaf(account));
         addedCount++;
@@ -66,7 +61,6 @@ class AccountTreeBuilder {
     }
 
     // 2. إذا لم يوجد، البحث عن أي حساب يمكن أن يكون Group
-    // (عادةً أول حساب في القائمة)
     if (accounts.isNotEmpty) {
       print('🔍 No group found, using first account as virtual group'); // ✅ ديبق
       return accounts.first;

@@ -509,7 +509,7 @@ class _AccountHierarchyPageState extends State<AccountHierarchyPage> {
             ],
           ),
         ),
-
+//////////////////////////////////////////////////////////
         // Children (recursive)
         if (isGroup && isExpanded) ...[
           const SizedBox(height: 8),
@@ -526,7 +526,6 @@ class _AccountHierarchyPageState extends State<AccountHierarchyPage> {
 
   String _getUserNameFromHierarchy(AccountComponent hierarchy) {
     if (hierarchy is AccountGroup) {
-      // محاولة استخراج اسم المستخدم من بيانات الحساب
       return hierarchy.groupAccount.userName ?? 'User ${hierarchy.groupAccount.userId}';
     }
     return 'Unknown User';
@@ -605,6 +604,7 @@ class _AccountHierarchyPageState extends State<AccountHierarchyPage> {
             children: [
               _buildStatisticItem('Total Groups', _hierarchies.length.toString()),
               _buildStatisticItem('Total Accounts', totalAccountsCount.toString()),
+              _buildStatisticItem(' Total leaves', totalLeaves.toString()),
               _buildStatisticItem('Group Accounts', totalGroups.toString()),
               const Divider(),
               _buildStatisticItem('Total Balance', '\$${totalAllGroupsBalance.toStringAsFixed(2)}'),
